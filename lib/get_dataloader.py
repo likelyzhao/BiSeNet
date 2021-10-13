@@ -6,6 +6,7 @@ import torch.distributed as dist
 import lib.transform_cv2 as T
 from lib.sampler import RepeatedDistSampler
 from lib.cityscapes_cv2 import CityScapes
+from lib.left_cv2 import Leftobj
 from lib.coco import CocoStuff
 
 

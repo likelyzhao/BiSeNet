@@ -129,6 +129,7 @@ def train():
 
     ## model
     net, criteria_pre, criteria_aux = set_model()
+    print("model complete")
 
     ## optimizer
     optim = set_optimizer(net)
@@ -138,6 +139,7 @@ def train():
 
     ## ddp training
     net = set_model_dist(net)
+    print("model dist complete")
 
     ## meters
     time_meter, loss_meter, loss_pre_meter, loss_aux_meters = set_meters()
@@ -202,6 +204,7 @@ def main():
         rank=args.local_rank
     )
     if not osp.exists(cfg.respth): os.makedirs(cfg.respth)
+    print('set logger')
     setup_logger(f'{cfg.model_type}-{cfg.dataset.lower()}-train', cfg.respth)
     train()
 

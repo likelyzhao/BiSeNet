@@ -14,17 +14,20 @@ def setup_logger(name, logpth):
     logfile = osp.join(logpth, logfile)
     FORMAT = '%(levelname)s %(filename)s(%(lineno)d): %(message)s'
     log_level = logging.INFO
+    print(logfile)
     if dist.is_initialized() and dist.get_rank() != 0:
         log_level = logging.WARNING
     try:
         logging.basicConfig(level=log_level, format=FORMAT, filename=logfile, force=True)
     except Exception:
+        print('error')
         logging.basicConfig(level=log_level, format=FORMAT, filename=logfile)
     logging.root.addHandler(logging.StreamHandler())
 
 
 def print_log_msg(it, max_iter, lr, time_meter, loss_meter, loss_pre_meter,
         loss_aux_meters):
+    print('logging')
     t_intv, eta = time_meter.get()
     loss_avg, _ = loss_meter.get()
     loss_pre_avg, _ = loss_pre_meter.get()
@@ -46,5 +49,6 @@ def print_log_msg(it, max_iter, lr, time_meter, loss_meter, loss_pre_meter,
         loss_pre=loss_pre_avg,
         )
     msg += ', ' + loss_aux_avg
+    print(msg)
     logger = logging.getLogger()
     logger.info(msg)
