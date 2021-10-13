@@ -7,6 +7,8 @@ import torch.nn as nn
 from PIL import Image
 import numpy as np
 import cv2
+import time
+import os
 
 import lib.transform_cv2 as T
 from lib.models import model_factory
@@ -38,11 +40,16 @@ to_tensor = T.ToTensor(
     mean=(0.3257, 0.3690, 0.3223), # city, rgb
     std=(0.2112, 0.2148, 0.2115),
 )
-im = cv2.imread(args.img_path)[:, :, ::-1]
-im = cv2.resize(im, [2048,1024])
-im = to_tensor(dict(im=im, lb=None))['im'].unsqueeze(0).cuda()
+for path in os.listdir(args.img_path):
+  
+  im = cv2.imread(os.path.join(args.img_path, path))[:, :, ::-1]
+  im = cv2.resize(im,[2048,1024])
+  im = to_tensor(dict(im=im, lb=None))['im'].unsqueeze(0).cuda()
 
-# inference
-out = net(im).squeeze().detach().cpu().numpy()
-pred = palette[out]
-cv2.imwrite('./res.jpg', pred)
+  t = time.time()
+  # inference
+  out = net(im).squeeze().detach().cpu().numpy()
+  elapsed = time.time() - t
+  print(elapsed)
+  pred = palette[out]
+  cv2.imwrite(path, pred)
